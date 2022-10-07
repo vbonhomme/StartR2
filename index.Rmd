@@ -1,0 +1,33 @@
+--- 
+title: "Start R"
+author: "Vincent Bonhomme"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+github-repo: rstudio/bookdown-demo
+description: "R for absolute beginners"
+---
+
+# Preamble 
+
+This book is primarily intended for students and researchers interested in R but with no prior knowledge of the language. 
+
+Dozens of similar books on the web exist, most of them are even open and free. This one has been largely guided with the help of 700+ students so far, mostly from 2014 to 2019. Also, this is how I wish R would have been taught to me, almost 20 years ago.
+
+This book is the transcription of a 20 hours training session that will take you from scratch to a general understanding of the language, practical data manipulation and visualization. At the end of it, you should no longer be afraid of a list, writing your own functions or to dig into stack overflow archives.
+
+Nowadays everyone is in an hurry and desire to hit the ground running with R. Even if, as for natural languages, mastering a programming language takes years. This book is written with this in mind and often points to curated resources where you can mastering a particular aspect of the language.
+
+This edition is a complete rewriting started in 2022 of a first one, not publicly released. This edition aims to put the tidyverse even more at core but maintain a prior solid training on R basic grammar and philosophy. Until completely rewrote, I will keep updating it whenever I have time to do so.
+
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```

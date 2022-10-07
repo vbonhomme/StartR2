@@ -1,0 +1,309 @@
+# R101
+
+## Hello world
+To follow up the tradition, let's print a message on the console. Open a script, paste the lines below, save it as "hello.R" and run it. You can also type it directly into the console.
+```{r}
+hello <- "Hello world!"
+hello
+```
+
+As you can see, R code is pretty natural and easy to read. Usually we read it from right to left (and also from nested brackets to outer brackets).
+
+Here, we have typed a message, explicitly created as a chain of characters because we put it into quotes (`"`)^[You can use simple quotes (`'`) as well. Having two different quotes allow to use one for defining a string, and the other to use as a litteral quote, try: `print("Hello 'quoted' world")`]. Then we use the **assignment operator** `<-` whose direction indicates that we assign it into a **variable** called `hello`. 
+
+When `hello` is **called**, it simply prints it message on the console^[R does actually call `print(hello)` for you].
+
+## Basic arithmetics
+You're likely here to manipulate numbers not only strings, so here we go:
+
+```{r}
+x <- 32*2
+y <- sqrt(x)
+y
+y^2
+```
+
+R is a sophisticated calculator that you can use to do basic arithmetics. Here we assigned the result of `32*2` into a variable called `x`, then we calculated the square root of `x` and assigned it to another variable called `y`. To do so, we used the `function` `sqrt()` which is short for square root. When the `sqrt` function is *passed* with the **argument** x, the value of the latter is retrived and its square root is returned.
+
+The `*` and the `^` are arithmetic **operators**. You can access all of them by typing `?Arithmetic` in the console. An operator roughly means "shortcut", in other words, a function call to hides its brackets.
+
+## Functions and help pages
+In R, everything that has brackets is a function call^[and more generally everything is a function call in R, even when you do not see brackets (try `"*"(1, 2)`).].
+
+All functions have a manual page that can be accessed using `?function_name`, for example `?print`. Some general topics are also accessible for example `?Arithmetic`.
+
+Every time you discover and/or struggle a function, read the manual. Help pages are not exactly poetry: they may appear boring and disturbing at first but there is beauty in their concision and what you're looking for is probably there. Most of them also have examples that you can copy/paste to better understand what they do^[One can also use `example("function_name")`].
+
+## Vectors
+So far, we have only had variables with a single value or **scalars**. A variable can be a **vector** and contain more than a single value. To create vectors, we use the function `c` which names stands for "concatenate".
+
+```{r}
+x <- c(1, 2, 3, 4, 5, 6, 7)
+x^2
+```
+
+Here we assigned a new value to `x`, so the previous one (64) is lost. As you can see, when calculating `x^2`, we calculate the square of all values of `x`. Not all functions behave this way since some of them return a scalar, by construction:
+
+```{r}
+length(x)
+sum(x)
+sd(x)
+```
+
+Here we accessed the number of elements in `x` (with `length`), its `sum` and its standard deviation (`sd`).
+
+Now let say we are interested in calculating the sum of integers not from 1 to 7, but from 1 to 100. As you can imagine, there must be a smarter way than typing `c(1, 2, ..., 99, 100)`. You're right, and that's the job of `seq`:
+
+```{r}
+sum(seq(from=1, to=100, by=1))
+```
+
+## The golden rule
+Possibly the most important rule in R, and in any programming language is :
+
+> If something sounds dumb and/or repeatitive there must be a smarter way to do it.
+
+There are several ways to avoid to do dumb and/or repeative things like having vocabulary (knowing functions to avoid paraphrasing) or the right grammar (ie defining your own functions to avoid copy/pasting entire blocks with minro changes between them). Be sure, that of this will come naturally with time and mistakes. Everything in its time, the first step is to make things work, then the aim will be to doing it in a smarter way.
+
+
+Back to regular sequences, this is such a repetitive need that we have a shortcut for that, thanks to the operator `:`.
+
+```{r}
+sum(1:100)
+```
+
+## Function arguments
+When using `seq` as above, you can do more things because there are different flavours of regular sequences. That's the purpose of functions **arguments**. You can see arguments as functions parameters or options, but we will call them arguments. They are easily recognized because they come into functions brackets. In the code above they were explicitely named so that we know, at first glance, what they do: we `start` from 1, we go `to` 100, `by` an increment of 1.
+
+This does not come out of the blue but from the function **definition**, that is how the function was written by someone else for you to use it. Have a look to the manual. Past the summary, the second and third section are "Usage" and "Arguments". Again, everytime you feel that a function could do something that fits your needs, it is probably there and you have to find the information in the manual. For instance if you want, only even numbers, or a sequence of a length 12, it is simply variants of `seq`:
+
+```{r}
+seq(0, 10, by=2)
+seq(0, 10, length=4)
+```
+
+
+If you compared the syntax to the Usage section of `?seq`, you will probably note that above, I omitted the name of the first two arguments (`from` and `to`), and also that the third argument was `by` and then `length`. I also abbreviated `length.out` as `length`, and yet, it works as expected. The rules to know when working with arguments follows:
+
+* You can omit argument names as long as they come in the same order as found in the `Usage` section.
+* You can abbreviate argument names as long as the abbreviation in unequivocal among all defined arguments
+* If an argument is not specified, it takes its default value, as mentionned in the Usage section
+* You can, yet it is never necessary nor a good idea, change the order of arguments.
+
+In other words, these commands are strictly equivalent:
+```{r}
+seq(from=1, to=5, by=1.2)
+seq(f=1, t=5, b=1.2)
+seq(1, 5, 1.2)
+seq(by=1.2, to=5)
+```
+
+## Other sequence generators
+Also have a look to `rep` that replicated elements of vectors:
+
+```{r}
+rep(1:3, each=3)
+rep(5:2, times=2)
+```
+
+We will explored them later, but if you are looking for random number generation, they are named `r+abbreviated_distribution_name`:
+```{r}
+set.seed(123)
+runif(5, 0, 1)
+rnorm(10, 0, 1)
+```
+
+## Recycling
+When you do an operation between two vectors, it is usually done element-wise:
+
+```{r}
+x <- 1:5
+y <- 10:6
+x
+y
+x*y
+```
+
+But when the length of vectors is not compatible, R does **recycle** the shorted vector to match the length of the longer one. Usually, recycling is useful but it may also be troublesome, particularly when it does not come with a warning.
+```{r}
+z <- c(0, 1)
+x
+z
+x+z # equivalent to c(1, 2, 3, 4, 5) + c(0, 1, 0, 1, 0)
+```
+
+## Indexing
+To access a particular element in an object, we will use the square bracket `object[i]`, with i being the index of the element to access:
+
+```{r}
+x <- c(3, 1, 5, 4)
+x[2]
+x[3]/4
+```
+
+In R, the first element is 1^[This may sound natural but in most languages it is 0].
+
+Indexing can be used to access a particular value and/or to change it when combined with the **assignment operator**
+
+```{r}
+x
+x[2] <- 1.2
+x
+```
+
+You can also access more than one element:
+```{r}
+x[2:4]
+x[c(1, 3)]
+```
+
+And change more than a single value at a time. Recycling applies here
+```{r}
+x
+x[2:4] <- c(0.2, 0.4, 0.5)
+x
+x[2:4] <- 99
+x
+```
+
+So far we have seed **positive indexing** but sometimes it is also useful to state which elements you do NOT want:
+
+```{r}
+x <- 3:7
+x
+x[-1] # all but the first
+x[-length(x)] # all but the last
+x[-c(1, length(x))] # trim both ends
+```
+
+You can also use variables:
+
+```{r}
+indices <- c(1, 4)
+x <- -2:3
+x
+x[indices]
+```
+
+## Tests and logicals
+
+You can do logical tests in R. They return a vector of type "logical".
+
+```{r}
+x <- 1:5
+x > 3
+```
+
+You can directly pass this vector of type `logical` as an indexing variable or turn them into `numeric` indices:
+```{r}
+x[x > 3]
+above_three <- which(x>3)
+x[above_three]
+```
+ 
+To get the full list of relational operators, type `?Comparison`. You can also do set operations, see `?sets`; `%in%` operator is often used
+
+```{r}
+x
+x==4
+x<=3
+x!=2
+x %in% c(2, 4)
+```
+
+## NA
+
+```{r}
+x[seq(1, 5, by=2)]
+```
+
+On the last command, we tried to access all elements from 1 to 5 with an increment of 2 (ie `{1, 3, 5}`). The `x` only has 4 elements, so the 5^th does not exist. R returns `NA` which stands for **Non available**. NAs are very common when doing data analyses and some functions may not work as expected as long as there is a single NA in the object you're doing calculations with:
+
+```{r}
+x <- c(1, 5, NA, 6)
+mean(x)
+```
+
+`NA` is returned here for a good reason: the missing value could be 4 or 3 billions! If you want to ignore NAs, you must explicitely mention it to R. Some functions have a `na.rm` (remove NAs) arguments, otherwise there is the `na.omit` function:
+
+```{r}
+mean(x, na.rm=TRUE)
+mean(na.omit(x))
+```
+
+## Other structures
+Besides scalars and vectors, R can handle objects with more dimensions such as **matrices** which are 2-dimensionnal **arrays**, **lists** and **data.frame** that are rectangular lists.
+
+###  Matrices
+Let's begin with matrices:
+```{r}
+mat <- matrix(1:9, nrow=3, ncol=3)
+mat
+```
+
+Matrices are rectangular objects that contain number on which we can do many thing, including arithmetic operations:
+
+```{r}
+sum(mat)
+mat/2
+colSums(mat)
+```
+
+They can be indexed using the syntax: `object[i, j]`. We have one more indexing argument, since we now have two dimensions. The first being the row index, the second being the column index by convention. If you omit one, this means "take all of them". Otherwise, all other indexing rules applies.
+
+```{r}
+mat[1, 2] # first row, second column
+mat[2, ] # second row
+mat[-2, c(1, 3)] # all rows but the second, first and third columns
+```
+
+Among useful functions when working with matrices, we have:
+```{r}
+dim(mat) 
+nrow(mat)
+ncol(mat)
+colnames(mat) # not defined so far
+colnames(mat) <- c("a", "b", "c") # let's name columns
+colnames(mat) # now defined
+
+```
+
+###  Lists
+Lists are vectors than can contain objects of different type. They can be named or not:
+
+```{r}
+x <- list(a=1, b="hello", c=mat)
+x
+```
+
+They can be indexed with three different syntaxes: `[`, `[[` or `$`. `$` will only work for a **single** and **named** element:
+
+```{r}
+x$mat
+```
+
+This is mostly useful when working with `data.frame`s that are a particular flavor of lists, to retrieve a single column. We will be back at it later.
+
+Single and double square brackets are quite confusing at first glance, but they allow to retrieve either the element and retain its list nature (`[`), or the element and dropping its list nature (`[[`):
+
+```{r}
+x[1]
+class(x[1])
+# x[1] + 3 This won't work as we still have a list
+
+x[[1]]
+class(x[[1]])
+x[[1]]+3
+```
+
+###  data.frames
+Data frames are rectangular lists. They are the natural structure in data analysis because they correspond to a spreadheet.
+
+Consequently and practically, they also are the central object in modern R, at the very core of the tidyverse grammar.
+
+
+## Footnotes
+
+
+
+
