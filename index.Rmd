@@ -12,7 +12,7 @@ github-repo: rstudio/bookdown-demo
 description: "R for absolute beginners"
 ---
 
-# Preamble 
+# Preamble
 
 This book is primarily intended for students and researchers interested in R but with no prior knowledge of the language. 
 
